@@ -37,15 +37,17 @@ public class DatabaseLoader implements ApplicationRunner {
             new Author("efisher", "Eric",  "Fisher", "password"),
             new Author("csouza", "Carlos",  "Souza", "password")
         ));
-        authorRepository.saveAll(authors);
         IntStream.range(0,40).forEach(i->{
             String template = templates[i % templates.length];
             String gadget = gadgets[i % gadgets.length];
-
             String title = String.format(template, gadget);
             Post post = new Post(title, "Lorem ipsum dolor sit amet, consectetur adipiscing elit… ");
+            Author author = authors.get(i%authors.size());
+            post.setAuthor(author);
+            author.addPost(post);
             randomPosts.add(post);
         });
+        authorRepository.saveAll(authors);
         postRepository.saveAll(randomPosts);
     }
 }
